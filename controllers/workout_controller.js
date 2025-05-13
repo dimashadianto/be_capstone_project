@@ -1,32 +1,38 @@
 const workoutModel = require("../models/workout_model.js");
 
-const getAllWorkoutPlans = (req, res) => {
-  workoutModel.getAllWorkoutPlans((err, results) => {
+const getCategories = (req, res) => {
+  workoutModel.getCategories((err, results) => {
     if (err) {
       return res.status(500).json({ message: "Terjadi kesalahan pada server" });
     }
-
     res.status(200).json(results);
   });
 };
 
-const getWorkoutPlanById = (req, res) => {
-  const { id } = req.params;
+const getWorkoutPlansByCategory = (req, res) => {
+  const { categoryId } = req.params;
 
-  workoutModel.getWorkoutPlanById(id, (err, results) => {
+  workoutModel.getWorkoutPlansByCategory(categoryId, (err, results) => {
     if (err) {
       return res.status(500).json({ message: "Terjadi kesalahan pada server" });
     }
+    res.status(200).json(results);
+  });
+};
 
-    if (results.length === 0) {
-      return res.status(404).json({ message: "Workout plan tidak ditemukan" });
+const getExercisesByWorkoutPlan = (req, res) => {
+  const { workoutPlanId } = req.params;
+
+  workoutModel.getExercisesByWorkoutPlan(workoutPlanId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Terjadi kesalahan pada server" });
     }
-
-    res.status(200).json(results[0]);
+    res.status(200).json(results);
   });
 };
 
 module.exports = {
-  getAllWorkoutPlans,
-  getWorkoutPlanById,
+  getCategories,
+  getWorkoutPlansByCategory,
+  getExercisesByWorkoutPlan,
 };

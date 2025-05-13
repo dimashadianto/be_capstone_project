@@ -1,55 +1,39 @@
 const db = require("../config/database.js");
 
-const getAllWorkoutPlans = (callback) => {
-  const query = `
-        SELECT wp.*, 
-               JSON_ARRAYAGG(
-                   JSON_OBJECT(
-                       'id', wpe.id,
-                       'exercise_id', e.id,
-                       'exercise_name', e.name,
-                       'exercise_description', e.description,
-                       'muscle_group', e.muscle_group,
-                       'sets', wpe.sets,
-                       'reps', wpe.reps,
-                       'rest_interval', wpe.rest_interval_seconds,
-                       'notes', wpe.notes
-                   )
-               ) as exercises
-        FROM workout_plans wp
-        LEFT JOIN workout_plan_exercises wpe ON wp.id = wpe.workout_plan_id
-        LEFT JOIN exercises e ON wpe.exercise_id = e.id
-        GROUP BY wp.id
-    `;
+const getCategories = (callback) => {
+  const query = "SELECT id, name FROM workout_categories";
   db.query(query, callback);
 };
 
-const getWorkoutPlanById = (id, callback) => {
+const getWorkoutPlansByCategory = (categoryId, callback) => {
   const query = `
-        SELECT wp.*, 
-               JSON_ARRAYAGG(
-                   JSON_OBJECT(
-                       'id', wpe.id,
-                       'exercise_id', e.id,
-                       'exercise_name', e.name,
-                       'exercise_description', e.description,
-                       'muscle_group', e.muscle_group,
-                       'sets', wpe.sets,
-                       'reps', wpe.reps,
-                       'rest_interval', wpe.rest_interval_seconds,
-                       'notes', wpe.notes
-                   )
-               ) as exercises
-        FROM workout_plans wp
-        LEFT JOIN workout_plan_exercises wpe ON wp.id = wpe.workout_plan_id
-        LEFT JOIN exercises e ON wpe.exercise_id = e.id
-        WHERE wp.id = ?
-        GROUP BY wp.id
-    `;
-  db.query(query, [id], callback);
+    SELECT id, name, description, image_url 
+    FROM workout_plans 
+    WHERE category_id = ?
+  `;
+  db.query(query, [categoryId], callback);
+};
+
+const getExercisesByWorkoutPlan = (workoutPlanId, callback) => {
+  const query = `
+    SELECT 
+      e.name, 
+      e.description, 
+      e.image_url, 
+      e.muscle_group,
+      wpe.sets, 
+      wpe.reps, 
+      wpe.rest_interval_seconds, 
+      wpe.notes
+    FROM workout_plan_exercises wpe
+    JOIN exercises e ON wpe.exercise_id = e.id
+    WHERE wpe.workout_plan_id = ?
+  `;
+  db.query(query, [workoutPlanId], callback);
 };
 
 module.exports = {
-  getAllWorkoutPlans,
-  getWorkoutPlanById,
+  getCategories,
+  getWorkoutPlansByCategory,
+  getExercisesByWorkoutPlan,
 };
