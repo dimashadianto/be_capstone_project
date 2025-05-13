@@ -12,4 +12,10 @@ router.get('/category/:categoryId', articleController.getArticlesByCategory);
 // Route untuk menambahkan artikel baru
 router.post('/add', articleController.addArticle);
 
+//Route update article
+router.put('/update/:id', articleController.updateArticle);
+
+// Route untuk delete artikel
+router.delete('/delete/:id', articleController.deleteArticle);
+
 module.exports = router;
