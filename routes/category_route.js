@@ -9,4 +9,10 @@ router.get('/', categoryController.getAllCategories);
 // Route untuk menambahkan kategori baru
 router.post('/add', categoryValidation.validateCategory, categoryController.addCategory);
 
+// Route untuk mengupdate kategori
+router.put('/update/:id', categoryController.updateCategory);
+
+// Route untuk menghapus kategori
+router.delete('/delete/:id', categoryController.deleteCategory);
+
 module.exports = router;
