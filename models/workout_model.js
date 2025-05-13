@@ -1,7 +1,7 @@
 const db = require("../config/database.js");
 
 const getCategories = (callback) => {
-  const query = "SELECT id, name FROM workout_categories";
+  const query = "SELECT id, name, image_url FROM workout_categories";
   db.query(query, callback);
 };
 
