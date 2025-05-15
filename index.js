@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoute = require('./routes/user_route.js');
+const cors = require('cors');
 const categoryRoute = require('./routes/category_route.js'); // Import category route
 const articleRoute = require('./routes/article_route.js'); // Import article route
 require('dotenv').config();
 
 const app = express();
+
 const PORT = process.env.PORT || 8080;
+app.use(cors());
 
 app.use(bodyParser.json());
 
