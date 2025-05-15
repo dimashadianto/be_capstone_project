@@ -17,7 +17,7 @@ const register = (req, res) => {
         
         userModel.createUser(newUser, (err, result) => {
             if (err) return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
-            res.status(201).json({ message: 'Registrasi berhasil' });
+            res.status(201).json({ message: 'Pendaftaran akun berhasil' });
         });
     });
 };
@@ -37,7 +37,7 @@ const login = (req, res) => {
         const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
-        res.status(200).json({ message: 'Login berhasil', token });
+        res.status(200).json({ message: 'Berhasil masuk ke akun anda', token });
     });
 };
 
