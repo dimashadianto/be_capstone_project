@@ -10,7 +10,12 @@ const createArticle = (article, callback) => {
 };
 
 const getArticles = (callback) => {
-  db.query('SELECT * FROM article', callback);
+  const sql = `
+    SELECT a.*, c.name AS category_name 
+    FROM article a
+    LEFT JOIN article_categories c ON a.category_id = c.id
+  `;
+  db.query(sql, callback);
 };
 
 const getArticleById = (id, callback) => {
