@@ -13,6 +13,11 @@ const getArticles = (callback) => {
   db.query('SELECT * FROM article', callback);
 };
 
+const getArticleById = (id, callback) => {
+  db.query('SELECT * FROM article WHERE id = ?', [id], callback);
+};
+
+
 const getArticlesByCategory = (categoryId, callback) => {
   db.query('SELECT * FROM article WHERE category_id = ?', [categoryId], callback);
 };
@@ -35,5 +40,6 @@ module.exports = {
   getArticles,
   getArticlesByCategory,
   updateArticle,
-  deleteArticle
+  deleteArticle,
+  getArticleById 
 };

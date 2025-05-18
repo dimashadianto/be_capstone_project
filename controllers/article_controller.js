@@ -19,6 +19,22 @@ const getAllArticles = (req, res) => {
   });
 };
 
+const getArticleById = (req, res) => {
+  const { id } = req.params;
+
+  articleModel.getArticleById(id, (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'Artikel tidak ditemukan' });
+    }
+
+    res.status(200).json({ article: result[0] });
+  });
+};
+
 const getArticlesByCategory = (req, res) => {
   const categoryId = req.params.categoryId;
   
@@ -63,5 +79,6 @@ module.exports = {
   getAllArticles,
   getArticlesByCategory,
   updateArticle,
-  deleteArticle
+  deleteArticle,
+  getArticleById 
 };
