@@ -3,9 +3,12 @@ const bodyParser = require("body-parser");
 const userRoute = require("./routes/user_route.js");
 const workoutRoute = require("./routes/workout_route.js");
 require("dotenv").config();
+var cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+app.use(cors());
 
 app.use(bodyParser.json());
 
