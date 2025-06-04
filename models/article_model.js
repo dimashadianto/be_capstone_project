@@ -39,6 +39,19 @@ const deleteArticle = (id, callback) => {
   db.query('DELETE FROM article WHERE id = ?', [id], callback);
 };
 
+const searchArticles = (keyword, callback) => {
+  const query = `
+    SELECT a.*, c.name AS category_name
+    FROM article a
+    LEFT JOIN article_categories c ON a.category_id = c.id
+    WHERE LOWER(a.title) LIKE LOWER(?) OR LOWER(a.content) LIKE LOWER(?)
+  `;
+
+  const wildcard = `%${keyword}%`;
+  db.query(query, [wildcard, wildcard], callback);
+};
+
+
 
 module.exports = {
   createArticle,
@@ -46,5 +59,6 @@ module.exports = {
   getArticlesByCategory,
   updateArticle,
   deleteArticle,
-  getArticleById 
+  getArticleById,
+  searchArticles
 };

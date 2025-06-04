@@ -73,6 +73,23 @@ const deleteArticle = (req, res) => {
   });
 };
 
+const searchArticles = (req, res) => {
+  const keyword = req.query.keyword;
+
+  if (!keyword) {
+    return res.status(400).json({ message: 'Keyword tidak boleh kosong' });
+  }
+
+  articleModel.searchArticles(keyword, (err, results) => {
+    if (err) {
+      console.error(err); // Untuk log error di terminal
+      return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
+    }
+
+    res.status(200).json({ articles: results });
+  });
+};
+
 
 module.exports = {
   addArticle,
@@ -80,5 +97,6 @@ module.exports = {
   getArticlesByCategory,
   updateArticle,
   deleteArticle,
-  getArticleById 
+  getArticleById,
+  searchArticles
 };
