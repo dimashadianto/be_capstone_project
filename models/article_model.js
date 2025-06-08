@@ -1,4 +1,3 @@
-// models/article_model.js
 const db = require('../config/database.js');
 
 const createArticle = (article, callback) => {
@@ -19,9 +18,14 @@ const getArticles = (callback) => {
 };
 
 const getArticleById = (id, callback) => {
-  db.query('SELECT * FROM article WHERE id = ?', [id], callback);
+  const sql = `
+    SELECT a.*, c.name AS category_name
+    FROM article a
+    LEFT JOIN article_categories c ON a.category_id = c.id
+    WHERE a.id = ?
+  `;
+  db.query(sql, [id], callback);
 };
-
 
 const getArticlesByCategory = (categoryId, callback) => {
   db.query('SELECT * FROM article WHERE category_id = ?', [categoryId], callback);
@@ -51,14 +55,12 @@ const searchArticles = (keyword, callback) => {
   db.query(query, [wildcard, wildcard], callback);
 };
 
-
-
 module.exports = {
   createArticle,
   getArticles,
+  getArticleById,
   getArticlesByCategory,
   updateArticle,
   deleteArticle,
-  getArticleById,
   searchArticles
 };

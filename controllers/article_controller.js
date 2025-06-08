@@ -1,4 +1,3 @@
-// controllers/article_controller.js
 const articleModel = require('../models/article_model.js');
 
 const addArticle = (req, res) => {
@@ -52,7 +51,7 @@ const updateArticle = (req, res) => {
 
   articleModel.updateArticle(id, updatedArticle, (err, result) => {
     if (err) {
-      console.error(err); // Menampilkan error di server
+      console.error(err);
       return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
     }
 
@@ -82,14 +81,13 @@ const searchArticles = (req, res) => {
 
   articleModel.searchArticles(keyword, (err, results) => {
     if (err) {
-      console.error(err); // Untuk log error di terminal
+      console.error(err);
       return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
     }
 
     res.status(200).json({ articles: results });
   });
 };
-
 
 module.exports = {
   addArticle,

@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
 
 app.use('/api/user', userRoute);
-app.use('/api/categories', categoryRoute); // Menggunakan route kategori
-app.use('/api/articles', articleRoute); // Route artikel
+app.use('/api/categories', categoryRoute); 
+app.use('/api/articles', articleRoute); 
 app.use("/api/workouts", workoutRoute);
 
 app.listen(PORT, () => {
