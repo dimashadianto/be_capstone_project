@@ -34,3 +34,4 @@ app.use('/api/calorie', calorie_route);
 app.listen(PORT, () => {
   console.log(`Server berjalan di port ${PORT}`);
 });
+
