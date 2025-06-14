@@ -5,6 +5,7 @@ const userRoute = require('./routes/user_route.js');
 const categoryRoute = require('./routes/category_route.js'); 
 const articleRoute = require('./routes/article_route.js');
 const workoutRoute = require('./routes/workout_route.js'); 
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -12,7 +13,11 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use('/api/user', userRoute);
