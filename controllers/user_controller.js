@@ -17,7 +17,7 @@ const register = (req, res) => {
         
         userModel.createUser(newUser, (err, result) => {
             if (err) return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
-            res.status(201).json({ message: 'Registrasi berhasil' });
+            res.status(201).json({ message: 'Pendaftaran akun berhasil' });
         });
     });
 };
@@ -37,7 +37,33 @@ const login = (req, res) => {
         const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
-        res.status(200).json({ message: 'Login berhasil', token });
+
+        const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+            expiresIn: '5h',
+        });
+
+        userModel.saveOrUpdateRefreshToken(user.id, refreshToken, (err, result) => {
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'Strict',
+                maxAge: 60 * 1000,
+            });
+
+            res.status(200).json({ 
+                message: 'Berhasil masuk ke akun anda', 
+                token,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    phone: user.phone,
+                    birth_date: user.birth_date,
+                    city: user.city,
+                    occupation: user.occupation,
+                    email: user.email,
+                },
+            });
+        });
     });
 };
 
@@ -61,8 +87,41 @@ const resetPassword = async (req, res) => {
     });
 };
 
+const refreshToken = (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json({ message: 'Refresh token tidak ditemukan' });
+
+    userModel.findByRefreshToken(refreshToken, (err, results) => {
+        if (err || !results.length) return res.status(403).json({ message: 'Refresh token tidak valid' });
+
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+            if (err) return res.status(403).json({ message: 'Refresh token tidak valid' });
+
+            const newAccessToken = jwt.sign({ id: decoded.id }, process.env.JWT_SECRET, {
+                expiresIn: '20s',
+            });
+
+            res.status(200).json({ accessToken: newAccessToken });
+        });
+    });
+};
+
+const logout = (req, res) => {
+  const userId = req.user?.id;
+
+  console.log(req.user);
+  if (!userId) return res.status(401).json({ message: 'User tidak ditemukan' });
+
+  userModel.deleteRefreshTokenByUserId(userId, (err) => {
+    if (err) return res.status(500).json({ message: 'Gagal logout' });
+    res.status(200).json({ message: 'Berhasil logout' });
+  });
+};
+
 module.exports = {
     register,
     login,
-    resetPassword
+    resetPassword,
+    refreshToken,
+    logout,
 };
