@@ -1,4 +1,4 @@
-export const calculateCalorie = (req, res) => {
+const calculateCalorie = (req, res) => {
     const { usia, gender, tinggi, berat } = req.body;
   
     let bmr;
@@ -12,4 +12,8 @@ export const calculateCalorie = (req, res) => {
     res.json({
       bmr: Math.round(bmr)
     });
+};
+
+module.exports = {
+  calculateCalorie,
 };
