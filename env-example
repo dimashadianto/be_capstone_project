@@ -4,3 +4,4 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=
 JWT_SECRET=yourjwtsecret
+JWT_REFRESH_SECRET=yourjwtrefreshsecret
