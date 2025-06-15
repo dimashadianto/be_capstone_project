@@ -109,7 +109,6 @@ const refreshToken = (req, res) => {
 const logout = (req, res) => {
   const userId = req.user?.id;
 
-  console.log(req.user);
   if (!userId) return res.status(401).json({ message: 'User tidak ditemukan' });
 
   userModel.deleteRefreshTokenByUserId(userId, (err) => {
